@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @UniqueEntity(fields={"speudo"}, message="This pseudo is already taken")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -76,6 +77,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $campus;
 
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $speudo;
+
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
@@ -121,11 +127,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        return $this->roles;
     }
 
     public function setRoles(array $roles): self
@@ -265,6 +268,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    public function getSpeudo(): ?string
+    {
+        return $this->speudo;
+    }
+
+    public function setSpeudo(?string $speudo): self
+    {
+        $this->speudo = $speudo;
 
         return $this;
     }

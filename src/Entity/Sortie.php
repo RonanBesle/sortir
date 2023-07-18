@@ -61,6 +61,7 @@ class Sortie
 
     /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sorties")
+     * @ORM\JoinColumn(name="campus_id", referencedColumnName="id")
      */
     private $campus;
 
