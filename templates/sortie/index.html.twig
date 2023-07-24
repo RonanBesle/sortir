@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sortie index{% endblock %}
+
+{% block body %}
+    <h1>Sortie index</h1>
+    <section>
+        {{ form_start(form) }}
+        {{ form_label(form.campus) }}
+        {{ form_widget(form.campus, {'attr': {'class': 'form-control'}}) }}
+        {{ form_label(form.nom) }} {# Ajoutez le label pour le champ de recherche par nom #}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }} {# Ajoutez le champ de recherche par nom #}
+        {{ form_row(form.dateHeureDebut, {'label': 'Date de début', 'attr': {'class': 'form-control'}}) }}
+        {{ form_label(form.organisateur) }}
+        {{ form_widget(form.organisateur, {'attr': {'class': 'form-control'}}) }}
+        {{ form_row(form.caseACocherOrganisateur) }}
+        {{ form_row(form.bleu) }}
+
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+        {{ form_end(form) }}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom de la sortie</th>
+                    <th>Date de la sortie</th>
+                    <th>Clôture</th>
+                    <th>inscrits/places</th>
+                    <th>Etat</th>
+                    <th>Inscrit</th>
+                    <th>Organisateur</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% if form.bleu.vars.value == 1 %}
+                <div style="background-color: blue;">bleu</div>
+            {% else %}
+                <div style="background-color: green;">vert</div>
+            {% endif %}
+
+            {% for sortie in sorties %}
+                <tr>
+                    <td>{{ sortie.nom }}</td>
+                    <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i') : '' }}</td>
+                    <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d') : '' }}</td>
+                    <td>{{ sortie.users|length }} / {{ sortie.nbInscriptionsMax }}</td>
+                    <td>{{ sortie.etat ? sortie.etat.libelle : 'N/A' }}</td>
+                    <td>
+                        {% if app.user is defined and app.user in sortie.users %}
+                            X
+                        {% else %}
+
+                        {% endif %}
+                    </td>
+                    <td>{{ sortie.organisateur }}</td>
+                    <td>
+                        <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Afficher</a>
+                        {% if app.user is defined and app.user in sortie.organisateur %}
+                            <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                        {% else %}
+
+                        {% endif %}
+                        {% if app.user is defined and app.user in sortie.users %}
+                            <form action="{{ path('app_sortie_desister', {'id': sortie.id}) }}" method="post">
+                                <button type="submit">Se désister</button>
+                            </form>
+                        {% else %}
+                            <form action="{{ path('app_sortie_inscription', {'id': sortie.id}) }}" method="post">
+                                <button type="submit">S'inscrire</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <form action="{{ path('app_sortie_new')}}" method="post">
+            <button type="submit">Créer une sortie</button>
+        </form>
+    </section>
+{% endblock %}
