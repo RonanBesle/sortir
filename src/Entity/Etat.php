@@ -25,7 +25,7 @@ class Etat
     private $libelle;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="etat")
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="etat", cascade={"persist"})
      */
     private $sorties;
 
@@ -79,5 +79,10 @@ class Etat
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->libelle;
     }
 }

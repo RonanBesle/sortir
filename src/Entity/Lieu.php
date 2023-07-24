@@ -40,12 +40,12 @@ class Lieu
     private $longitude;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="lieu")
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="lieu", cascade={"persist"})
      */
     private $sorties;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Ville::class, inversedBy="lieux")
+     * @ORM\ManyToOne(targetEntity=Ville::class, inversedBy="lieux", cascade={"persist"})
      */
     private $ville;
 
@@ -147,5 +147,11 @@ class Lieu
         $this->ville = $ville;
 
         return $this;
+    }
+    public function __toString()
+    {
+        // Spécifiez ici comment vous souhaitez représenter l'objet Lieu en chaîne de caractères.
+        // Par exemple, si vous voulez afficher le nom du lieu, vous pouvez faire :
+        return $this->nom;
     }
 }

@@ -283,4 +283,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    public function __toString()
+    {
+        // Spécifiez ici comment vous souhaitez représenter l'objet Lieu en chaîne de caractères.
+        // Par exemple, si vous voulez afficher le nom du lieu, vous pouvez faire :
+        return $this->nom;
+    }
 }

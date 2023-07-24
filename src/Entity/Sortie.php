@@ -50,39 +50,35 @@ class Sortie
     private $infosSortie;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Etat::class, inversedBy="sorties")
+     * @ORM\ManyToOne(targetEntity=Etat::class, inversedBy="sorties", cascade={"persist"})
      */
     private $etat;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $relation;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sorties")
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sorties", cascade={"persist"})
      * @ORM\JoinColumn(name="campus_id", referencedColumnName="id")
      */
     private $campus;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties")
+     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties", cascade={"persist"})
      */
     private $lieu;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="sorties")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="sorties",cascade={"persist"})
      */
     private $users;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sorties")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sorties", cascade={"persist"})
      */
     private $organisateur;
 
     public function __construct()
     {
-        $this->Users = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -174,17 +170,6 @@ class Sortie
         return $this;
     }
 
-    public function getRelation(): ?string
-    {
-        return $this->relation;
-    }
-
-    public function setRelation(string $relation): self
-    {
-        $this->relation = $relation;
-
-        return $this;
-    }
 
     public function getCampus(): ?Campus
     {

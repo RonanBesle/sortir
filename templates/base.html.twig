@@ -16,13 +16,13 @@
     <body>
         <nav id="mainNav">
             <ul>
-                <li><a href="{{ path('sortie_list') }}">Accueil</a></li>
+                <li><a href="{{ path('app_sortie_index') }}">Accueil</a></li>
                 {% if app.user %}
                     <li><a href="{{ path('profil_show', { 'id': app.user.id }) }}">Profil</a></li>
                     <li><a href="{{ path('app_logout') }}" title="Logout">Se déconnecter {{ app.user.speudo }}</a></li>
 
                     {% if is_granted("ROLE_ADMIN") %}
-                        <li><a href="{{ path('admin_dashboard') }}" title="Admin dashborad" >Admin</a></li>
+                        <li><a href="{{ path('admin_dashboard') }}" title="Admin dashboard" >Admin</a></li>
                     {% endif %}
 
                 {% else %}
