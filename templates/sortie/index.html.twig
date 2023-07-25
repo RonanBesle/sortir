@@ -3,14 +3,22 @@
 {% block title %}Sortie index{% endblock %}
 
 {% block body %}
+    <p>Date du jour : {{ "now"|date('Y-m-d') }}</p>
+    <p>Participant : {{ app.user.nom }}</p>
     <h1>Sortie index</h1>
     <section>
         {{ form_start(form) }}
 
-            {{ form_row(form.nomRecherche) }}
-            {{ form_row(form.campusRecherche) }}
-            {{ form_row(form.organisateurBoolean) }}
-            <button type="submit" class="btn btn-primary">Filtrer</button>
+        {{ form_row(form.nomRecherche) }}
+        {{ form_row(form.campusRecherche) }}
+        {{ form_row(form.dateHeureDebutRecherche) }}
+        {{ form_row(form.dateMin) }}
+        {{ form_row(form.dateMax) }}
+        {{ form_row(form.organisateurBoolean) }}
+        {{ form_row(form.inscritBoolean) }}
+        {{ form_row(form.notInscritBoolean) }}
+        {{ form_row(form.ulterieurBoolean) }}
+        <button type="submit" class="btn btn-primary">Rechercher</button>
 
         {{ form_end(form) }}
         <table class="table">

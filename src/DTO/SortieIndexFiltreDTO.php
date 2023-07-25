@@ -23,7 +23,40 @@ class SortieIndexFiltreDTO
      */
     public $organisateurBoolean = false;
 
+    /**
+     * @var boolean
+     */
+    public $inscritBoolean = false;
 
+    /**
+     * @var boolean
+     */
+    public $notInscritBoolean = false;
 
+    /**
+     * @var boolean
+     */
+    public $ulterieurBoolean = false;
+
+    /**
+     * @var \DateTime
+     */
+    public $dateHeureDebutRecherche;
+
+    /**
+     * @var \DateTime
+     */
+    public $dateMin;
+
+    /**
+     * @var \DateTime
+     */
+    public $dateMax;
+
+    public function __construct()
+    {
+        // Récupérer la date du jour
+        $this->dateHeureDebutRecherche = new \DateTime();
+    }
 
 }

@@ -34,8 +34,38 @@ class SortieIndexType extends AbstractType
               ])
 
           ->add('organisateurBoolean', CheckboxType::class, [
-              'label' => 'Sortie dont je suis organisateur/trice',
+              'label' => 'Sorties dont je suis organisateur/trice',
               'required' => false,
+          ])
+
+          ->add('inscritBoolean', CheckboxType::class, [
+              'label' => 'Sorties auxquelles je suis inscrit/e',
+              'required' => false,
+          ])
+
+          ->add('notInscritBoolean', CheckboxType::class, [
+              'label' => 'Sorties auxquelles je ne suis pas inscrit/e',
+              'required' => false,
+          ])
+
+          ->add('ulterieurBoolean', CheckboxType::class, [
+              'label' => 'Sorties passées',
+              'required' => false,
+          ])
+
+          ->add('dateHeureDebutRecherche', DateType::class, [
+              'label' => 'Date',
+              'required' => false,
+          ])
+
+          ->add('dateMin', DateType::class, [
+              'label' => 'Entre',
+              'required' => false,
+          ])
+
+          ->add('dateMax', DateType::class, [
+            'label' => 'et',
+            'required' => false,
           ])
         ;
 

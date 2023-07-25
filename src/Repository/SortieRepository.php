@@ -6,6 +6,7 @@ use App\DTO\SortieIndexFiltreDTO;
 use App\Entity\Campus;
 use App\Entity\Sortie;
 use App\Entity\User;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -64,10 +65,27 @@ class SortieRepository extends ServiceEntityRepository
      */
     public function findSearch(SortieIndexFiltreDTO $search, User $user): array
     {
-        $user=$this->getUser();
-        $user->getId();
+        // dd($search);
+        $userId = $user->getId();
+
+        // dd($userId);
 
         $query = $this->createQueryBuilder('s');
+
+        // Récupérer la date actuelle
+        $now = new DateTime();
+
+        // Ajouter la condition pour exclure les sorties dont dateHeureDebut est inférieure à la date actuelle
+
+        if (!empty($search->ulterieurBoolean)) {
+            $query = $query
+                ->andWhere('s.dateHeureDebut <= :now')
+                ->setParameter('now', $now);
+        } else {
+            $query = $query
+                ->andWhere('s.dateHeureDebut >= :now')
+                ->setParameter('now', $now);
+        }
 
         if (!empty($search->campusRecherche)) {
             $query = $query
@@ -83,11 +101,39 @@ class SortieRepository extends ServiceEntityRepository
 
         if (!empty($search->organisateurBoolean)) {
             $query = $query
-                ->andWhere('s.organisateur = :user')
-                ->setParameter('user', $user)
-                ->setParameter('organisateurBoolean', true);
+                ->andWhere('s.organisateur = :userId')
+                ->setParameter('userId', $userId)
+
+            ;
         }
 
+
+
+        if (!empty($search->notInscritBoolean)) {
+            $query = $query
+                ->andWhere(':userId NOT MEMBER OF s.users')
+                ->setParameter('userId', $userId)
+
+            ;
+        }
+
+
+        if ($search->dateHeureDebutRecherche) {
+            $query->andWhere('s.dateHeureDebut = :dateHeureDebut')
+                ->setParameter('dateHeureDebut', $search->dateHeureDebutRecherche);
+        }
+
+        if (!empty($search->dateMin)) {
+            $query = $query
+                ->andWhere('s.dateHeureDebut >= :dateMin')
+                ->setParameter('dateMin', $search->dateMin);
+        }
+
+        if (!empty($search->dateMax)) {
+            $query = $query
+                ->andWhere('s.dateHeureDebut <= :dateMax')
+                ->setParameter('dateMax', $search->dateMax);
+        }
 
 
         return $query->getQuery()->getResult();

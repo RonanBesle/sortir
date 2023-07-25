@@ -34,8 +34,8 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         //dd($data);
-
-        $sorties = $sortieRepository->findSearch($data);
+        $user = $this->getUser();
+        $sorties = $sortieRepository->findSearch($data, $user);
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
