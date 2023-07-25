@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\SortieIndexFiltreDTO;
 use App\Entity\Sortie;
 use App\Form\SortieIndexType;
 use App\Form\SortieType;
@@ -19,33 +20,22 @@ class SortieController extends AbstractController
 {
     /**
      * @Route("/", name="app_sortie_index", methods={"GET", "POST"} )
+     * @Route("/main_home", name="main_home", methods={"GET"})
      */
     public function index(Request $request, SortieRepository $sortieRepository, Security $security): Response
     {
+        // Créez une instance de votre classe DTO pour initialiser les valeurs du formulaire
+        $data = new SortieIndexFiltreDTO;
 
 
         // Création d'un formulaire pour filtrer les sorties
-        $form = $this->createForm(SortieIndexType::class);
+        $form = $this->createForm(SortieIndexType::class, $data);
+        // Gérer la requete après la création du formulaire
         $form->handleRequest($request);
 
+        //dd($data);
 
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $campus = $data->getcampus();
-            $nomSortie = $data->getNom();
-            $dateDebut = $data->getDateHeureDebut();
-            $organisateur = $data->getOrganisateur();
-            $currentUser = $this->getUser();
-
-
-            $sorties = $sortieRepository->findByFilters($campus, $nomSortie, $dateDebut, $organisateur, $currentUser);
-
-        } else {
-            // Si le formulaire n'est pas soumis, affichez toutes les sorties
-            $sorties = $sortieRepository->findAll();
-        }
-
+        $sorties = $sortieRepository->findSearch($data);
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,

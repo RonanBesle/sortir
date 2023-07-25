@@ -6,17 +6,12 @@
     <h1>Sortie index</h1>
     <section>
         {{ form_start(form) }}
-        {{ form_label(form.campus) }}
-        {{ form_widget(form.campus, {'attr': {'class': 'form-control'}}) }}
-        {{ form_label(form.nom) }} {# Ajoutez le label pour le champ de recherche par nom #}
-        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }} {# Ajoutez le champ de recherche par nom #}
-        {{ form_row(form.dateHeureDebut, {'label': 'Date de début', 'attr': {'class': 'form-control'}}) }}
-        {{ form_label(form.organisateur) }}
-        {{ form_widget(form.organisateur, {'attr': {'class': 'form-control'}}) }}
-        {{ form_row(form.caseACocherOrganisateur) }}
-        {{ form_row(form.bleu) }}
 
-        <button type="submit" class="btn btn-primary">Rechercher</button>
+            {{ form_row(form.nomRecherche) }}
+            {{ form_row(form.campusRecherche) }}
+            {{ form_row(form.organisateurBoolean) }}
+            <button type="submit" class="btn btn-primary">Filtrer</button>
+
         {{ form_end(form) }}
         <table class="table">
             <thead>
@@ -32,11 +27,6 @@
                 </tr>
             </thead>
             <tbody>
-            {% if form.bleu.vars.value == 1 %}
-                <div style="background-color: blue;">bleu</div>
-            {% else %}
-                <div style="background-color: green;">vert</div>
-            {% endif %}
 
             {% for sortie in sorties %}
                 <tr>

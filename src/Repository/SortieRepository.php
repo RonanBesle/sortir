@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\DTO\SortieIndexFiltreDTO;
 use App\Entity\Campus;
 use App\Entity\Sortie;
 use App\Entity\User;
@@ -56,55 +57,39 @@ class SortieRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByFilters(?Campus $campus, ?string $nomSortie, ?DateTimeInterface $dateDebut, ?User $organisateur)
+
+    /**
+     * Récupère les sorties de la page sortie/index
+     * @return Sortie[]
+     */
+    public function findSearch(SortieIndexFiltreDTO $search, User $user): array
     {
+        $user=$this->getUser();
+        $user->getId();
+
         $query = $this->createQueryBuilder('s');
 
-        // Appliquer les filtres en fonction des valeurs fournies
-        if ($campus) {
-            $query->andWhere('s.campus = :campus')
-                ->setParameter('campus', $campus);
+        if (!empty($search->campusRecherche)) {
+            $query = $query
+                ->andWhere('s.campus = :campus')
+                ->setParameter('campus', $search->campusRecherche);
         }
 
-        if ($nomSortie) {
-            $query->andWhere('s.nom LIKE :nomSortie')
-                ->setParameter('nomSortie', '%' . $nomSortie . '%');
-        }
-        if ($dateDebut) {
-            $query->andWhere('s.dateHeureDebut >= :dateDebut')
-                ->setParameter('dateDebut', $dateDebut);
+        if (!empty($search->nomRecherche)) {
+            $query = $query
+                ->andWhere('s.nom LIKE :nomRecherche')
+                ->setParameter('nomRecherche', "%{$search->nomRecherche}%");
         }
 
-        if ($organisateur) {
-            $query->andWhere('s.organisateur = :organisateur')
-                ->setParameter('organisateur', $organisateur);
+        if (!empty($search->organisateurBoolean)) {
+            $query = $query
+                ->andWhere('s.organisateur = :user')
+                ->setParameter('user', $user)
+                ->setParameter('organisateurBoolean', true);
         }
+
+
 
         return $query->getQuery()->getResult();
     }
-
-//    /**
-//     * @return Sortie[] Returns an array of Sortie objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Sortie
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
